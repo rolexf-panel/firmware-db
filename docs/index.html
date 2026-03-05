@@ -1,136 +1,149 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNOFFICIAL | Firmware Mirror for Transsion Device</title>
+    <title>Firmware Archive | Transsion Devices</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         :root {
-            --bg: #0c0c0d;
-            --bg-elevated: #151516;
-            --bg-card: #1a1a1b;
-            --border: #2a2a2b;
-            --border-hover: #3a3a3b;
-            --text: #e5e5e5;
-            --text-dim: #a0a0a0;
-            --text-muted: #666666;
-            --accent: #ff5f1f;
-            --accent-dim: rgba(255, 95, 31, 0.15);
-            --accent-glow: rgba(255, 95, 31, 0.4);
-            --success: #2ea043;
-            --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: "JetBrains Mono", "SF Mono", Monaco, monospace;
+            --bg: #0f0f10;
+            --surface: #18181b;
+            --surface-hover: #27272a;
+            --border: #27272a;
+            --border-active: #3f3f46;
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #22d3ee;
+            --accent-dim: rgba(34, 211, 238, 0.1);
+            --accent-glow: rgba(34, 211, 238, 0.3);
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --error: #f87171;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         html {
-            font-size: 14px;
+            font-size: 15px;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
-            font-family: var(--font-main);
-            background-color: var(--bg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
             color: var(--text);
-            line-height: 1.5;
+            line-height: 1.6;
             min-height: 100vh;
         }
 
-        body::before {
-            content: "";
+        /* Background gradient mesh */
+        .bg-mesh {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.025;
             pointer-events: none;
-            z-index: 9999;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            z-index: 0;
+            opacity: 0.4;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(34, 211, 238, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(120, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
         }
 
-        .site-header {
-            background: var(--bg-elevated);
+        /* Header */
+        .header {
+            background: rgba(15, 15, 16, 0.8);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .site-header .container {
+        .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 60px;
+            height: 72px;
         }
 
-        .brand {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .brand-icon {
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 20px;
-            color: var(--accent);
-            animation: flicker 4s infinite;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
         }
 
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            52% { opacity: 1; }
-            53% { opacity: 0.3; }
-            54% { opacity: 1; }
-            78% { opacity: 1; }
-            79% { opacity: 0.4; }
-            80% { opacity: 1; }
-        }
-
-        .brand-text h1 {
-            font-size: 16px;
+        .logo-text h1 {
+            font-size: 20px;
             font-weight: 700;
-            letter-spacing: -0.3px;
-            line-height: 1.2;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--text) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .brand-tag {
-            display: block;
-            font-size: 10px;
+        .logo-text span {
+            font-size: 12px;
             color: var(--text-muted);
-            font-family: var(--font-mono);
-            text-transform: lowercase;
-            letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
-        .header-meta {
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-badge {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 11px;
-            color: var(--text-dim);
-            font-family: var(--font-mono);
+            padding: 8px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
+        .stat-badge .dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--success);
-            box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(46, 160, 67, 0.3);
-            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(74, 222, 128, 0.2);
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
@@ -138,518 +151,511 @@
             50% { opacity: 0.5; }
         }
 
-        .alpha-nav {
-            background: var(--bg);
+        /* Navigation Pills */
+        .nav-section {
+            padding: 20px 0;
             border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 60px;
-            z-index: 90;
-            padding: 10px 0;
-            overflow-x: auto;
-            scrollbar-width: none;
         }
 
-        .alpha-nav::-webkit-scrollbar {
+        .nav-pills {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+
+        .nav-pills::-webkit-scrollbar {
             display: none;
         }
 
-        .alpha-list {
-            display: flex;
-            gap: 2px;
-            min-width: max-content;
-        }
-
-        .alpha-btn {
-            min-width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .pill {
+            padding: 10px 20px;
             background: transparent;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 12px;
-            font-weight: 600;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.15s ease;
-            text-transform: uppercase;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
-        .alpha-btn:hover:not(:disabled) {
-            background: var(--bg-elevated);
-            color: var(--text-dim);
-            border-color: var(--border);
+        .pill:hover {
+            background: var(--surface);
+            border-color: var(--border-active);
+            color: var(--text);
         }
 
-        .alpha-btn.active {
+        .pill.active {
             background: var(--accent);
-            color: var(--bg);
             border-color: var(--accent);
+            color: var(--bg);
+            font-weight: 600;
+            box-shadow: 0 4px 20px var(--accent-glow);
         }
 
-        .alpha-btn:disabled {
-            opacity: 0.15;
+        .pill:disabled {
+            opacity: 0.3;
             cursor: not-allowed;
         }
 
-        main.container {
-            padding-top: 24px;
-            padding-bottom: 60px;
-        }
-
-        .intro-box {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .intro-box p {
-            color: var(--text-dim);
-            font-size: 13px;
-            margin-bottom: 12px;
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        .last-update {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .last-update .time-ago {
-            color: var(--accent);
-        }
-
-        .layout-grid {
+        /* Main Layout */
+        .main-layout {
             display: grid;
-            grid-template-columns: 220px 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 32px;
-            align-items: start;
+            padding: 32px 0;
         }
 
+        /* Sidebar */
         .sidebar {
             position: sticky;
             top: 120px;
+            height: fit-content;
         }
 
-        .sidebar-section {
-            margin-bottom: 28px;
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
         }
 
-        .sidebar-section h3 {
-            font-size: 10px;
+        .sidebar-title {
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 10px;
             font-weight: 600;
+            margin-bottom: 16px;
         }
 
-        .group-list {
-            list-style: none;
+        .series-list {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
         }
 
-        .group-btn {
-            width: 100%;
-            text-align: left;
-            padding: 8px 10px;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 6px;
-            color: var(--text-dim);
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.15s ease;
+        .series-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        .group-btn:hover {
-            background: var(--bg-card);
-            color: var(--text);
-        }
-
-        .group-btn.active {
-            background: var(--bg-card);
-            border-color: var(--border-hover);
-            color: var(--text);
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            font-size: 14px;
             font-weight: 500;
         }
 
-        .group-count {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            background: var(--bg);
-            padding: 2px 6px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+        .series-item:hover {
+            background: var(--surface-hover);
+            color: var(--text);
         }
 
-        .stats-grid {
+        .series-item.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .series-count {
+            font-size: 12px;
+            padding: 4px 10px;
+            background: var(--bg);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        .series-item.active .series-count {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .stats-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 16px;
         }
 
-        .stat-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 12px;
-            border-radius: 6px;
+        .stat-box {
             text-align: center;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
-        .stat-value {
-            display: block;
-            font-size: 18px;
+        .stat-number {
+            font-size: 24px;
             font-weight: 700;
             color: var(--accent);
-            font-family: var(--font-mono);
-            line-height: 1;
-            margin-bottom: 4px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .stat-label {
-            font-size: 9px;
-            text-transform: uppercase;
+            font-size: 11px;
             color: var(--text-muted);
+            text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-top: 4px;
         }
 
-        .main-content {
+        /* Content Area */
+        .content {
             min-width: 0;
         }
 
-        .controls {
-            margin-bottom: 16px;
-        }
-
-        .search-wrap {
+        .search-bar {
             position: relative;
+            margin-bottom: 24px;
         }
 
-        #search {
+        .search-input {
             width: 100%;
-            padding: 12px 40px 12px 14px;
-            background: var(--bg-card);
+            padding: 16px 20px 16px 52px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 14px;
             color: var(--text);
-            font-family: var(--font-main);
-            font-size: 13px;
-            transition: all 0.15s ease;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
         }
 
-        #search:focus {
+        .search-input:focus {
             outline: none;
             border-color: var(--accent);
-            background: var(--bg-elevated);
+            box-shadow: 0 0 0 3px var(--accent-dim);
         }
 
-        #search::placeholder {
+        .search-input::placeholder {
             color: var(--text-muted);
         }
 
-        .search-hint {
+        .search-icon {
             position: absolute;
-            right: 10px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            font-family: var(--font-mono);
-            font-size: 10px;
             color: var(--text-muted);
-            background: var(--bg);
-            padding: 3px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            pointer-events: none;
+            font-size: 18px;
         }
 
-        .active-filter {
-            margin-bottom: 16px;
+        .search-shortcut {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 6px 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             font-size: 11px;
             color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .active-filter span {
+        .filter-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .filter-info strong {
             color: var(--accent);
-            font-weight: 500;
-            text-transform: lowercase;
+            font-weight: 600;
         }
 
-        .firmware-list {
+        /* Device Cards */
+        .device-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
 
-        .letter-section {
-            margin-bottom: 32px;
-        }
-
-        .letter-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .letter-header {
-            font-size: 28px;
-            font-weight: 800;
+        .letter-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 32px 0 20px;
             color: var(--accent);
-            opacity: 0.2;
-            font-family: var(--font-mono);
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        .fw-card {
-            background: var(--bg-card);
+        .letter-divider::before,
+        .letter-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        .letter-divider:first-of-type {
+            margin-top: 0;
+        }
+
+        .device-card {
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            transition: all 0.2s ease;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
             position: relative;
+            overflow: hidden;
         }
 
-        .fw-card::before {
-            content: "";
+        .device-card::before {
+            content: '';
             position: absolute;
-            left: 0;
             top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--accent);
-            border-radius: 8px 0 0 8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient);
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.3s ease;
         }
 
-        .fw-card:hover {
-            border-color: var(--border-hover);
-            transform: translateX(3px);
+        .device-card:hover {
+            border-color: var(--border-active);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .fw-card:hover::before {
+        .device-card:hover::before {
             opacity: 1;
         }
 
-        .fw-card.uncategorized::before {
-            background: var(--text-muted);
-        }
-
-        .fw-header {
+        .device-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            gap: 16px;
+        }
+
+        .device-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .device-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .device-meta {
+            display: flex;
+            align-items: center;
             gap: 12px;
             flex-wrap: wrap;
         }
 
-        .fw-title-group {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            min-width: 0;
-        }
-
-        .fw-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text);
-            letter-spacing: -0.2px;
-        }
-
-        .fw-id {
-            font-family: var(--font-mono);
-            font-size: 10px;
+        .device-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
             color: var(--text-muted);
+            padding: 4px 12px;
             background: var(--bg);
-            padding: 2px 6px;
-            border-radius: 4px;
+            border-radius: 20px;
             border: 1px solid var(--border);
-            text-transform: lowercase;
         }
 
-        .fw-group-tag {
-            font-size: 9px;
+        .device-series {
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             color: var(--accent);
+            padding: 4px 12px;
             background: var(--accent-dim);
-            padding: 2px 8px;
-            border-radius: 4px;
+            border-radius: 20px;
             font-weight: 600;
-            border: 1px solid var(--accent-dim);
         }
 
-        .fw-date {
-            font-family: var(--font-mono);
-            font-size: 10px;
+        .device-date {
+            font-size: 12px;
             color: var(--text-muted);
-            white-space: nowrap;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .fw-links {
+        .download-buttons {
             display: flex;
-            gap: 8px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .fw-link {
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 7px 12px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            color: var(--text-dim);
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
             text-decoration: none;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
         }
 
-        .fw-link:hover {
-            background: var(--bg-elevated);
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-1px);
-        }
-
-        .fw-link.primary {
-            background: var(--accent-dim);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .fw-link.primary:hover {
+        .btn-primary {
             background: var(--accent);
             color: var(--bg);
-            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .link-icon {
-            font-size: 10px;
-            opacity: 0.7;
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px var(--accent-glow);
         }
 
-        .loading-state {
-            text-align: center;
-            padding: 60px 20px;
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+            border-color: var(--border-active);
+        }
+
+        .btn-icon {
+            font-size: 14px;
+        }
+
+        /* Loading & Empty States */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
             color: var(--text-muted);
         }
 
-        .spinner {
-            width: 32px;
-            height: 32px;
-            border: 2px solid var(--border);
+        .spinner-modern {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
             border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .empty-state {
+        .empty-container {
             text-align: center;
-            padding: 80px 20px;
+            padding: 100px 20px;
             color: var(--text-muted);
         }
 
-        .empty-state.hidden {
-            display: none;
+        .empty-icon-large {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
 
-        .empty-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-            opacity: 0.3;
-            font-family: var(--font-mono);
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
         }
 
-        .site-footer {
-            background: var(--bg-elevated);
+        /* Footer */
+        .footer {
+            background: var(--surface);
             border-top: 1px solid var(--border);
-            padding: 40px 0 24px;
+            padding: 48px 0 32px;
             margin-top: 60px;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
         .footer-col h4 {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
+            font-size: 13px;
             font-weight: 600;
+            color: var(--text);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
         }
 
         .footer-col p {
-            font-size: 12px;
-            color: var(--text-dim);
-            line-height: 1.7;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
         }
 
-        .status-list {
-            list-style: none;
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .status-list li {
-            font-size: 12px;
-            color: var(--text-dim);
-            margin-bottom: 6px;
+        .footer-link {
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
 
-        .status-ok {
-            color: var(--success);
-            font-size: 8px;
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        .status-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
         }
 
         .footer-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 20px;
+            padding-top: 24px;
             border-top: 1px solid var(--border);
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-muted);
-            font-family: var(--font-mono);
         }
 
-        @media (max-width: 768px) {
-            .layout-grid {
+        .footer-bottom a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .main-layout {
                 grid-template-columns: 1fr;
-                gap: 24px;
             }
 
             .sidebar {
@@ -658,56 +664,50 @@
                 order: 2;
             }
 
-            .group-list {
+            .series-list {
                 flex-direction: row;
                 flex-wrap: wrap;
             }
 
-            .group-btn {
+            .series-item {
                 width: auto;
             }
 
             .footer-grid {
                 grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .alpha-nav {
-                top: 60px;
+                gap: 32px;
             }
         }
 
-        @media (max-width: 480px) {
-            .site-header .container {
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
                 height: auto;
-                padding: 12px 20px;
+                padding: 16px 0;
+                gap: 16px;
+            }
+
+            .device-header {
                 flex-direction: column;
-                gap: 8px;
-                align-items: flex-start;
             }
 
-            .alpha-nav {
-                top: auto;
-                position: relative;
-            }
-
-            .fw-header {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .fw-links {
+            .download-buttons {
                 width: 100%;
             }
 
-            .fw-link {
+            .btn {
                 flex: 1;
                 justify-content: center;
             }
 
-            .search-hint {
+            .search-shortcut {
                 display: none;
             }
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none !important;
         }
 
         ::-webkit-scrollbar {
@@ -722,11 +722,10 @@
         ::-webkit-scrollbar-thumb {
             background: var(--border);
             border-radius: 4px;
-            border: 2px solid var(--bg);
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--border-hover);
+            background: var(--border-active);
         }
 
         ::selection {
@@ -736,97 +735,122 @@
     </style>
 </head>
 <body>
-    <header class="site-header">
+    <div class="bg-mesh"></div>
+
+    <header class="header">
         <div class="container">
-            <div class="brand">
-                <span class="brand-icon">◈</span>
-                <div class="brand-text">
-                    <h1>firmware.pova</h1>
-                    <span class="brand-tag">unofficial mirror archive</span>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">📦</div>
+                    <div class="logo-text">
+                        <h1>Firmware Archive</h1>
+                        <span>Transsion Devices Repository</span>
+                    </div>
                 </div>
-            </div>
-            <div class="header-meta">
-                <span class="status-dot"></span>
-                <span id="total-count">0 files</span>
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <span class="dot"></span>
+                        <span id="sync-status">Live</span>
+                    </div>
+                    <div class="stat-badge" id="total-badge">
+                        <span id="total-count">0</span> devices
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <nav class="alpha-nav">
+    <nav class="nav-section">
         <div class="container">
-            <div class="alpha-list" id="alpha-list"></div>
+            <div class="nav-pills" id="alpha-nav">
+                <button class="pill active" data-alpha="all">All</button>
+            </div>
         </div>
     </nav>
 
     <main class="container">
-        <div class="intro-box">
-            <p>Kumpulan firmware unofficial untuk device Transsion (Tecno, Infinix, Itel). Mirror disediakan sebagai backup karena link official sering mati.</p>
-            <div class="last-update">last sync: <span id="last-sync">checking...</span></div>
-        </div>
-
-        <div class="layout-grid">
+        <div class="main-layout">
             <aside class="sidebar">
-                <div class="sidebar-section">
-                    <h3>Series</h3>
-                    <ul class="group-list" id="group-list">
-                        <li><button class="group-btn active" data-group="all">All Devices <span class="group-count">0</span></button></li>
-                    </ul>
-                </div>
-                <div class="sidebar-section">
-                    <h3>Stats</h3>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-value" id="stat-total">0</span>
-                            <span class="stat-label">total</span>
+                <div class="sidebar-card">
+                    <div class="sidebar-title">Device Series</div>
+                    <div class="series-list" id="series-list">
+                        <div class="series-item active" data-series="all">
+                            <span>All Devices</span>
+                            <span class="series-count">0</span>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-value" id="stat-groups">0</span>
-                            <span class="stat-label">series</span>
+                    </div>
+                </div>
+                <div class="sidebar-card">
+                    <div class="sidebar-title">Statistics</div>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-number" id="stat-total">0</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="stat-series">0</div>
+                            <div class="stat-label">Series</div>
                         </div>
                     </div>
                 </div>
             </aside>
 
-            <div class="main-content">
-                <div class="controls">
-                    <div class="search-wrap">
-                        <input type="text" id="search" placeholder="cari device atau series..." autocomplete="off">
-                        <span class="search-hint">ctrl + k</span>
+            <div class="content">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="search" placeholder="Search devices, models, or codenames..." autocomplete="off">
+                    <span class="search-shortcut">⌘K</span>
+                </div>
+
+                <div class="filter-info">
+                    Showing <strong id="filter-name">all devices</strong> • Updated <span id="last-sync">just now</span>
+                </div>
+
+                <div class="device-grid" id="device-grid">
+                    <div class="loading-container">
+                        <div class="spinner-modern"></div>
+                        <p>Loading firmware database...</p>
                     </div>
                 </div>
-                <div class="active-filter">showing: <span>all devices</span></div>
-                <div class="firmware-list" id="firmware-list">
-                    <div class="loading-state">
-                        <div class="spinner"></div>
-                        <p>loading database...</p>
-                    </div>
-                </div>
-                <div class="empty-state hidden" id="empty-state">
-                    <div class="empty-icon">∅</div>
-                    <p>tidak ada hasil</p>
+
+                <div class="empty-container hidden" id="empty-state">
+                    <div class="empty-icon-large">🔍</div>
+                    <div class="empty-title">No devices found</div>
+                    <p>Try adjusting your search or filters</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h4>about</h4>
-                    <p>Proyek personal untuk backup firmware. Bukan afiliasi resmi Transsion.</p>
+                    <h4>About</h4>
+                    <p>Unofficial firmware mirror for Tecno, Infinix, and Itel devices. Created as a backup solution since official links frequently expire or become unavailable.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>mirror status</h4>
-                    <ul class="status-list">
-                        <li><span class="status-ok">●</span> gofile.io</li>
-                        <li><span class="status-ok">●</span> pixeldrain</li>
-                    </ul>
+                    <h4>Mirror Status</h4>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">
+                            <span class="status-indicator"></span>
+                            Gofile.io — Operational
+                        </a>
+                        <a href="#" class="footer-link">
+                            <span class="status-indicator"></span>
+                            PixelDrain — Operational
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Contribute</h4>
+                    <p>Managed by <strong>rolexf-panel</strong><br>
+                    Database updates via Telegram Bot</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <span>built with questionable code</span>
-                <span>2024</span>
+                <span>© 2024 Firmware Archive. Not affiliated with Transsion.</span>
+                <span>Built with 💜 by rolexf-panel</span>
             </div>
         </div>
     </footer>
@@ -837,33 +861,37 @@
         const DATA_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/data/firmwares.json`;
 
         let allData = { groups: [], firmwares: [] };
-        let currentGroup = 'all';
+        let currentSeries = 'all';
         let currentAlpha = 'all';
 
-        const listEl = document.getElementById('firmware-list');
-        const emptyEl = document.getElementById('empty-state');
-        const searchEl = document.getElementById('search');
-        const countEl = document.getElementById('total-count');
-        const syncEl = document.getElementById('last-sync');
-        const groupListEl = document.getElementById('group-list');
-        const alphaListEl = document.getElementById('alpha-list');
-        const activeFilterEl = document.querySelector('.active-filter span');
-        const statTotalEl = document.getElementById('stat-total');
-        const statGroupsEl = document.getElementById('stat-groups');
+        const elements = {
+            grid: document.getElementById('device-grid'),
+            empty: document.getElementById('empty-state'),
+            search: document.getElementById('search'),
+            totalCount: document.getElementById('total-count'),
+            totalBadge: document.getElementById('total-badge'),
+            syncStatus: document.getElementById('sync-status'),
+            lastSync: document.getElementById('last-sync'),
+            filterName: document.getElementById('filter-name'),
+            seriesList: document.getElementById('series-list'),
+            alphaNav: document.getElementById('alpha-nav'),
+            statTotal: document.getElementById('stat-total'),
+            statSeries: document.getElementById('stat-series')
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             setupEventListeners();
-            // Update relative time setiap menit
             setInterval(updateRelativeTime, 60000);
         });
 
         function setupEventListeners() {
-            searchEl.addEventListener('input', () => renderList());
+            elements.search.addEventListener('input', () => renderDevices());
+            
             document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                     e.preventDefault();
-                    searchEl.focus();
+                    elements.search.focus();
                 }
             });
         }
@@ -871,171 +899,245 @@
         async function loadData() {
             try {
                 const response = await fetch(DATA_URL);
-                if (!response.ok) throw new Error('Failed to fetch');
+                if (!response.ok) throw new Error('Failed to load');
+                
                 allData = await response.json();
                 if (!allData.groups) allData.groups = [];
                 if (!allData.firmwares) allData.firmwares = [];
 
-                countEl.textContent = `${allData.firmwares.length} files`;
-                statTotalEl.textContent = allData.firmwares.length;
-                statGroupsEl.textContent = allData.groups.length;
-
-                // Simpan timestamp load dan update display
                 window.lastLoadTime = new Date();
-                updateRelativeTime();
-
-                renderGroups();
+                
+                updateStats();
+                renderSeries();
                 renderAlphaNav();
-                renderList();
+                renderDevices();
+                updateRelativeTime();
+                
             } catch (err) {
-                listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠</div><p>gagal memuat database</p><p style="font-size:12px;margin-top:8px;color:var(--text-muted)">${err.message}</p></div>`;
+                elements.grid.innerHTML = `
+                    <div class="empty-container">
+                        <div class="empty-icon-large">⚠️</div>
+                        <div class="empty-title">Failed to load database</div>
+                        <p>${err.message}</p>
+                    </div>
+                `;
+                elements.syncStatus.textContent = 'Error';
+                elements.syncStatus.previousElementSibling.style.background = 'var(--error)';
             }
+        }
+
+        function updateStats() {
+            const count = allData.firmwares.length;
+            elements.totalCount.textContent = count;
+            elements.totalBadge.innerHTML = `<span id="total-count">${count}</span> device${count !== 1 ? 's' : ''}`;
+            elements.statTotal.textContent = count;
+            elements.statSeries.textContent = allData.groups.length;
         }
 
         function updateRelativeTime() {
             if (!window.lastLoadTime) return;
             
-            const now = new Date();
-            const diff = Math.floor((now - window.lastLoadTime) / 1000); // detik
+            const diff = Math.floor((new Date() - window.lastLoadTime) / 1000);
+            let text = 'just now';
             
-            let text = '';
-            if (diff < 60) {
-                text = 'baru saja';
-            } else if (diff < 3600) {
-                const mins = Math.floor(diff / 60);
-                text = `${mins} menit yang lalu`;
-            } else if (diff < 86400) {
-                const hours = Math.floor(diff / 3600);
-                text = `${hours} jam yang lalu`;
-            } else {
-                const days = Math.floor(diff / 86400);
-                text = `${days} hari yang lalu`;
-            }
+            if (diff < 60) text = 'just now';
+            else if (diff < 3600) text = `${Math.floor(diff / 60)}m ago`;
+            else if (diff < 86400) text = `${Math.floor(diff / 3600)}h ago`;
+            else text = `${Math.floor(diff / 86400)}d ago`;
             
-            syncEl.innerHTML = `<span class="time-ago">${text}</span>`;
+            elements.lastSync.textContent = text;
         }
 
-        function renderGroups() {
-            const sortedGroups = [...allData.groups].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            const groupCounts = {};
+        function renderSeries() {
+            const sorted = [...allData.groups].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+            const counts = {};
             allData.firmwares.forEach(fw => {
-                const gid = fw.group_id || 'uncategorized';
-                groupCounts[gid] = (groupCounts[gid] || 0) + 1;
+                counts[fw.group_id || 'uncategorized'] = (counts[fw.group_id || 'uncategorized'] || 0) + 1;
             });
 
-            let html = `<li><button class="group-btn ${currentGroup === 'all' ? 'active' : ''}" data-group="all">All Devices <span class="group-count">${allData.firmwares.length}</span></button></li>`;
-            sortedGroups.forEach(g => {
-                const count = groupCounts[g.id] || 0;
-                html += `<li><button class="group-btn ${currentGroup === g.id ? 'active' : ''}" data-group="${g.id}">${escapeHtml(g.name)} <span class="group-count">${count}</span></button></li>`;
+            let html = `
+                <div class="series-item ${currentSeries === 'all' ? 'active' : ''}" data-series="all">
+                    <span>All Devices</span>
+                    <span class="series-count">${allData.firmwares.length}</span>
+                </div>
+            `;
+
+            sorted.forEach(g => {
+                const count = counts[g.id] || 0;
+                if (count > 0) {
+                    html += `
+                        <div class="series-item ${currentSeries === g.id ? 'active' : ''}" data-series="${g.id}">
+                            <span>${escapeHtml(g.name)}</span>
+                            <span class="series-count">${count}</span>
+                        </div>
+                    `;
+                }
             });
-            if (groupCounts['uncategorized']) {
-                html += `<li><button class="group-btn ${currentGroup === 'uncategorized' ? 'active' : ''}" data-group="uncategorized">Uncategorized <span class="group-count">${groupCounts['uncategorized']}</span></button></li>`;
+
+            if (counts['uncategorized']) {
+                html += `
+                    <div class="series-item ${currentSeries === 'uncategorized' ? 'active' : ''}" data-series="uncategorized">
+                        <span>Uncategorized</span>
+                        <span class="series-count">${counts['uncategorized']}</span>
+                    </div>
+                `;
             }
-            groupListEl.innerHTML = html;
 
-            groupListEl.querySelectorAll('.group-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentGroup = btn.dataset.group;
+            elements.seriesList.innerHTML = html;
+
+            elements.seriesList.querySelectorAll('.series-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    currentSeries = item.dataset.series;
                     currentAlpha = 'all';
-                    groupListEl.querySelectorAll('.group-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    alphaListEl.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
-                    alphaListEl.querySelector('[data-alpha="all"]').classList.add('active');
-                    updateActiveFilter();
-                    renderList();
+                    
+                    elements.seriesList.querySelectorAll('.series-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    elements.alphaNav.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                    elements.alphaNav.querySelector('[data-alpha="all"]').classList.add('active');
+                    
+                    updateFilterName();
+                    renderDevices();
                 });
             });
         }
 
         function renderAlphaNav() {
             const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-            let html = `<button class="alpha-btn ${currentAlpha === 'all' ? 'active' : ''}" data-alpha="all">#</button>`;
+            let html = `<button class="pill ${currentAlpha === 'all' ? 'active' : ''}" data-alpha="all">All</button>`;
+            
             alphabet.forEach(letter => {
-                const hasFirmware = allData.firmwares.some(fw => fw.nama.toLowerCase().startsWith(letter));
-                html += `<button class="alpha-btn ${currentAlpha === letter ? 'active' : ''}" data-alpha="${letter}" ${!hasFirmware ? 'disabled' : ''}>${letter}</button>`;
+                const hasDevices = allData.firmwares.some(fw => 
+                    fw.nama.toLowerCase().startsWith(letter)
+                );
+                html += `<button class="pill ${currentAlpha === letter ? 'active' : ''}" data-alpha="${letter}" ${!hasDevices ? 'disabled' : ''}>${letter.toUpperCase()}</button>`;
             });
-            alphaListEl.innerHTML = html;
+            
+            elements.alphaNav.innerHTML = html;
 
-            alphaListEl.querySelectorAll('.alpha-btn').forEach(btn => {
-                if (btn.disabled) return;
-                btn.addEventListener('click', () => {
-                    currentAlpha = btn.dataset.alpha;
-                    alphaListEl.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    updateActiveFilter();
-                    renderList();
+            elements.alphaNav.querySelectorAll('.pill:not(:disabled)').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    currentAlpha = pill.dataset.alpha;
+                    
+                    elements.alphaNav.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    
+                    updateFilterName();
+                    renderDevices();
                 });
             });
         }
 
-        function updateActiveFilter() {
-            let text = '';
-            if (currentGroup === 'all' && currentAlpha === 'all') {
-                text = 'all devices';
-            } else if (currentGroup !== 'all' && currentAlpha === 'all') {
-                const group = allData.groups.find(g => g.id === currentGroup);
-                text = group ? group.name.toLowerCase() : currentGroup;
-            } else if (currentGroup === 'all' && currentAlpha !== 'all') {
-                text = `letter "${currentAlpha.toUpperCase()}"`;
-            } else {
-                const group = allData.groups.find(g => g.id === currentGroup);
-                text = `${group ? group.name.toLowerCase() : currentGroup} + "${currentAlpha.toUpperCase()}"`;
+        function updateFilterName() {
+            let name = 'all devices';
+            
+            if (currentSeries !== 'all') {
+                const group = allData.groups.find(g => g.id === currentSeries);
+                name = group ? group.name.toLowerCase() : currentSeries;
             }
-            activeFilterEl.textContent = text;
+            
+            if (currentAlpha !== 'all') {
+                name = currentSeries === 'all' 
+                    ? `letter ${currentAlpha.toUpperCase()}`
+                    : `${name} (${currentAlpha.toUpperCase()})`;
+            }
+            
+            elements.filterName.textContent = name;
         }
 
-        function renderList() {
-            const searchTerm = searchEl.value.toLowerCase().trim();
+        function renderDevices() {
+            const searchTerm = elements.search.value.toLowerCase().trim();
             let filtered = allData.firmwares;
 
-            if (currentGroup !== 'all') {
-                if (currentGroup === 'uncategorized') {
+            if (currentSeries !== 'all') {
+                if (currentSeries === 'uncategorized') {
                     filtered = filtered.filter(fw => !fw.group_id);
                 } else {
-                    filtered = filtered.filter(fw => fw.group_id === currentGroup);
+                    filtered = filtered.filter(fw => fw.group_id === currentSeries);
                 }
             }
 
             if (searchTerm) {
-                filtered = filtered.filter(fw => fw.nama.toLowerCase().includes(searchTerm) || fw.id.toLowerCase().includes(searchTerm));
+                filtered = filtered.filter(fw => 
+                    fw.nama.toLowerCase().includes(searchTerm) ||
+                    fw.id.toLowerCase().includes(searchTerm)
+                );
             }
 
             if (currentAlpha !== 'all') {
-                filtered = filtered.filter(fw => fw.nama.toLowerCase().startsWith(currentAlpha));
+                filtered = filtered.filter(fw => 
+                    fw.nama.toLowerCase().startsWith(currentAlpha)
+                );
             }
 
             if (filtered.length === 0) {
-                listEl.innerHTML = '';
-                emptyEl.classList.remove('hidden');
+                elements.grid.innerHTML = '';
+                elements.empty.classList.remove('hidden');
                 return;
             }
 
-            emptyEl.classList.add('hidden');
+            elements.empty.classList.add('hidden');
             filtered.sort((a, b) => a.nama.localeCompare(b.nama));
 
             let html = '';
+            
             if (currentAlpha === 'all' && !searchTerm) {
                 const grouped = {};
                 filtered.forEach(fw => {
-                    const firstLetter = fw.nama[0].toUpperCase();
-                    if (!grouped[firstLetter]) grouped[firstLetter] = [];
-                    grouped[firstLetter].push(fw);
+                    const letter = fw.nama[0].toUpperCase();
+                    if (!grouped[letter]) grouped[letter] = [];
+                    grouped[letter].push(fw);
                 });
+
                 Object.keys(grouped).sort().forEach(letter => {
-                    html += `<div class="letter-section"><div class="letter-header">${letter}</div>${renderFirmwareCards(grouped[letter])}</div>`;
+                    html += `<div class="letter-divider">${letter}</div>`;
+                    html += renderDeviceCards(grouped[letter]);
                 });
             } else {
-                html += renderFirmwareCards(filtered);
+                html += renderDeviceCards(filtered);
             }
-            listEl.innerHTML = html;
+
+            elements.grid.innerHTML = html;
         }
 
-        function renderFirmwareCards(firmwares) {
-            return firmwares.map(fw => {
-                const group = allData.groups.find(g => g.id === fw.group_id);
-                const groupTag = group ? `<span class="fw-group-tag">${escapeHtml(group.name)}</span>` : '';
-                const uncategorizedClass = !fw.group_id ? 'uncategorized' : '';
-                return `<article class="fw-card ${uncategorizedClass}"><div class="fw-header"><div class="fw-title-group"><h3 class="fw-name">${escapeHtml(fw.nama)}</h3><span class="fw-id">${escapeHtml(fw.id)}</span>${groupTag}</div><time class="fw-date">${formatDate(fw.date)}</time></div><div class="fw-links"><a href="${escapeHtml(fw.links.utama)}" target="_blank" rel="noopener" class="fw-link primary"><span class="link-icon">↓</span><span>download</span></a>${fw.links.gofile ? `<a href="${escapeHtml(fw.links.gofile)}" target="_blank" rel="noopener" class="fw-link"><span class="link-icon">↗</span><span>gofile</span></a>` : ''}${fw.links.pixeldrain ? `<a href="${escapeHtml(fw.links.pixeldrain)}" target="_blank" rel="noopener" class="fw-link"><span class="link-icon">↗</span><span>pixeldrain</span></a>` : ''}</div></article>`;
+        function renderDeviceCards(devices) {
+            return devices.map(device => {
+                const group = allData.groups.find(g => g.id === device.group_id);
+                const seriesTag = group ? `<span class="device-series">${escapeHtml(group.name)}</span>` : '';
+                const uncategorized = !device.group_id ? 'style="border-left: 3px solid var(--text-muted);"' : '';
+
+                return `
+                    <article class="device-card" ${uncategorized}>
+                        <div class="device-header">
+                            <div class="device-info">
+                                <div class="device-name">${escapeHtml(device.nama)}</div>
+                                <div class="device-meta">
+                                    <span class="device-id">${escapeHtml(device.id)}</span>
+                                    ${seriesTag}
+                                </div>
+                            </div>
+                            <span class="device-date">${formatDate(device.date)}</span>
+                        </div>
+                        <div class="download-buttons">
+                            <a href="${escapeHtml(device.links.utama)}" target="_blank" rel="noopener" class="btn btn-primary">
+                                <span class="btn-icon">⬇</span>
+                                Primary Mirror
+                            </a>
+                            ${device.links.gofile ? `
+                            <a href="${escapeHtml(device.links.gofile)}" target="_blank" rel="noopener" class="btn btn-secondary">
+                                <span class="btn-icon">☁</span>
+                                Gofile
+                            </a>
+                            ` : ''}
+                            ${device.links.pixeldrain ? `
+                            <a href="${escapeHtml(device.links.pixeldrain)}" target="_blank" rel="noopener" class="btn btn-secondary">
+                                <span class="btn-icon">💧</span>
+                                PixelDrain
+                            </a>
+                            ` : ''}
+                        </div>
+                    </article>
+                `;
             }).join('');
         }
 
@@ -1050,13 +1152,19 @@
             const date = new Date(dateString);
             const now = new Date();
             const diff = (now - date) / 1000;
-            if (diff < 3600) return 'baru saja';
-            if (diff < 86400) return `${Math.floor(diff / 3600)}j lalu`;
-            if (diff < 604800) return `${Math.floor(diff / 86400)}h lalu`;
-            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+            
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+            });
         }
 
-        // Refresh data setiap 5 menit
         setInterval(loadData, 300000);
     </script>
 </body>
