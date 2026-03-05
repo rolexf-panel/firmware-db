@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNOFFICIAL | Firmware Mirror For Transsion Devices</title>
+    <title>UNOFFICIAL | Firmware Mirror for Transsion Device</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -21,7 +21,7 @@
             --border-hover: #3a3a3b;
             --text: #e5e5e5;
             --text-dim: #a0a0a0;
-            --text-muted: #666666;Y
+            --text-muted: #666666;
             --accent: #ff5f1f;
             --accent-dim: rgba(255, 95, 31, 0.15);
             --accent-glow: rgba(255, 95, 31, 0.4);
@@ -222,6 +222,10 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .last-update .time-ago {
+            color: var(--accent);
         }
 
         .layout-grid {
@@ -756,7 +760,7 @@
 
     <main class="container">
         <div class="intro-box">
-            <p>Unofficial firmware mirror site for Transsion Device.</p>
+            <p>Kumpulan firmware unofficial untuk device Transsion (Tecno, Infinix, Itel). Mirror disediakan sebagai backup karena link official sering mati.</p>
             <div class="last-update">last sync: <span id="last-sync">checking...</span></div>
         </div>
 
@@ -810,7 +814,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <h4>about</h4>
-                    <p>Just an personal project of mine</p>
+                    <p>Proyek personal untuk backup firmware. Bukan afiliasi resmi Transsion.</p>
                 </div>
                 <div class="footer-col">
                     <h4>mirror status</h4>
@@ -850,6 +854,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             setupEventListeners();
+            // Update relative time setiap menit
+            setInterval(updateRelativeTime, 60000);
         });
 
         function setupEventListeners() {
@@ -873,9 +879,10 @@
                 countEl.textContent = `${allData.firmwares.length} files`;
                 statTotalEl.textContent = allData.firmwares.length;
                 statGroupsEl.textContent = allData.groups.length;
-                syncEl.textContent = new Date(allData.last_updated).toLocaleString('id-ID', {
-                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                });
+
+                // Simpan timestamp load dan update display
+                window.lastLoadTime = new Date();
+                updateRelativeTime();
 
                 renderGroups();
                 renderAlphaNav();
@@ -883,6 +890,29 @@
             } catch (err) {
                 listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠</div><p>gagal memuat database</p><p style="font-size:12px;margin-top:8px;color:var(--text-muted)">${err.message}</p></div>`;
             }
+        }
+
+        function updateRelativeTime() {
+            if (!window.lastLoadTime) return;
+            
+            const now = new Date();
+            const diff = Math.floor((now - window.lastLoadTime) / 1000); // detik
+            
+            let text = '';
+            if (diff < 60) {
+                text = 'baru saja';
+            } else if (diff < 3600) {
+                const mins = Math.floor(diff / 60);
+                text = `${mins} menit yang lalu`;
+            } else if (diff < 86400) {
+                const hours = Math.floor(diff / 3600);
+                text = `${hours} jam yang lalu`;
+            } else {
+                const days = Math.floor(diff / 86400);
+                text = `${days} hari yang lalu`;
+            }
+            
+            syncEl.innerHTML = `<span class="time-ago">${text}</span>`;
         }
 
         function renderGroups() {
@@ -1026,6 +1056,7 @@
             return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         }
 
+        // Refresh data setiap 5 menit
         setInterval(loadData, 300000);
     </script>
 </body>
