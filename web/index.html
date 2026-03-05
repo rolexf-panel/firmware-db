@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transsion Firmware DB</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { 
+            color: white; 
+            text-align: center; 
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .stats {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            color: white;
+            text-align: center;
+        }
+        .firmware-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .firmware-card:hover { transform: translateY(-5px); }
+        .device-name { 
+            font-size: 1.3em; 
+            font-weight: bold; 
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .device-id { 
+            color: #666; 
+            font-size: 0.9em;
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .links { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .link-btn {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .link-btn:hover { opacity: 0.8; }
+        .btn-utama { background: #667eea; }
+        .btn-gofile { background: #00d084; }
+        .btn-pixeldrain { background: #ff6b6b; }
+        .meta {
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #888;
+        }
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+        }
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Transsion Firmware Archive</h1>
+        
+        <div class="stats" id="stats">
+            Memuat data...
+        </div>
+        
+        <input type="text" class="search-box" id="search" placeholder="Cari firmware..." onkeyup="filterData()">
+        
+        <div id="firmware-list">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        let allFirmwares = [];
+        
+        async function loadData() {
+            try {
+                // Ambil data dari GitHub raw
+                const response = await fetch('https://raw.githubusercontent.com/rolexf-panel/firmware-db/main/data/firmwares.json');
+                const data = await response.json();
+                allFirmwares = data.firmwares;
+                
+                document.getElementById('stats').innerHTML = 
+                    `📦 ${allFirmwares.length} firmware | 🕐 Update: ${new Date(data.last_updated).toLocaleString('id-ID')}`;
+                
+                renderData(allFirmwares);
+            } catch (err) {
+                document.getElementById('firmware-list').innerHTML = 
+                    `<div style="color:white;text-align:center">Error loading data: ${err.message}</div>`;
+            }
+        }
+        
+        function renderData(firmwares) {
+            const container = document.getElementById('firmware-list');
+            
+            if (firmwares.length === 0) {
+                container.innerHTML = '<div style="color:white;text-align:center">Tidak ada firmware</div>';
+                return;
+            }
+            
+            container.innerHTML = firmwares.map(fw => `
+                <div class="firmware-card">
+                    <div class="device-name">${fw.nama}</div>
+                    <span class="device-id">${fw.id}</span>
+                    
+                    <div class="links">
+                        <a href="${fw.links.utama}" target="_blank" class="link-btn btn-utama">🔗 Utama</a>
+                        <a href="${fw.links.gofile}" target="_blank" class="link-btn btn-gofile">📁 Gofile</a>
+                        <a href="${fw.links.pixeldrain}" target="_blank" class="link-btn btn-pixeldrain">💧 Pixeldrain</a>
+                    </div>
+                    
+                    <div class="meta">
+                        👤 ${fw.added_by} • 📅 ${new Date(fw.date).toLocaleDateString('id-ID')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterData() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = allFirmwares.filter(fw => 
+                fw.nama.toLowerCase().includes(query) || 
+                fw.id.toLowerCase().includes(query)
+            );
+            renderData(filtered);
+        }
+        
+        loadData();
+        // Refresh setiap 5 menit
+        setInterval(loadData, 300000);
+    </script>
+</body>
+</html>
