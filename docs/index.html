@@ -4,13 +4,734 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>firmware.pova // mirror archive</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0c0c0d;
+            --bg-elevated: #151516;
+            --bg-card: #1a1a1b;
+            --border: #2a2a2b;
+            --border-hover: #3a3a3b;
+            --text: #e5e5e5;
+            --text-dim: #a0a0a0;
+            --text-muted: #666666;
+            --accent: #ff5f1f;
+            --accent-dim: rgba(255, 95, 31, 0.15);
+            --accent-glow: rgba(255, 95, 31, 0.4);
+            --success: #2ea043;
+            --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: "JetBrains Mono", "SF Mono", Monaco, monospace;
+        }
+
+        html {
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-header {
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .site-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            font-size: 20px;
+            color: var(--accent);
+            animation: flicker 4s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            52% { opacity: 1; }
+            53% { opacity: 0.3; }
+            54% { opacity: 1; }
+            78% { opacity: 1; }
+            79% { opacity: 0.4; }
+            80% { opacity: 1; }
+        }
+
+        .brand-text h1 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+
+        .brand-tag {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(46, 160, 67, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .alpha-nav {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+            padding: 10px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .alpha-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .alpha-list {
+            display: flex;
+            gap: 2px;
+            min-width: max-content;
+        }
+
+        .alpha-btn {
+            min-width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+        }
+
+        .alpha-btn:hover:not(:disabled) {
+            background: var(--bg-elevated);
+            color: var(--text-dim);
+            border-color: var(--border);
+        }
+
+        .alpha-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        .alpha-btn:disabled {
+            opacity: 0.15;
+            cursor: not-allowed;
+        }
+
+        main.container {
+            padding-top: 24px;
+            padding-bottom: 60px;
+        }
+
+        .intro-box {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .intro-box p {
+            color: var(--text-dim);
+            font-size: 13px;
+            margin-bottom: 12px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .last-update {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 28px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .group-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .group-btn {
+            width: 100%;
+            text-align: left;
+            padding: 8px 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: var(--text-dim);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .group-btn:hover {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        .group-btn.active {
+            background: var(--bg-card);
+            border-color: var(--border-hover);
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .group-count {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            background: var(--bg);
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            min-width: 0;
+        }
+
+        .controls {
+            margin-bottom: 16px;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 40px 12px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: var(--font-main);
+            font-size: 13px;
+            transition: all 0.15s ease;
+        }
+
+        #search:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--bg-elevated);
+        }
+
+        #search::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-hint {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            pointer-events: none;
+        }
+
+        .active-filter {
+            margin-bottom: 16px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .active-filter span {
+            color: var(--accent);
+            font-weight: 500;
+            text-transform: lowercase;
+        }
+
+        .firmware-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .letter-section {
+            margin-bottom: 32px;
+        }
+
+        .letter-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .letter-header {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent);
+            opacity: 0.2;
+            font-family: var(--font-mono);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .fw-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .fw-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            border-radius: 8px 0 0 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .fw-card:hover {
+            border-color: var(--border-hover);
+            transform: translateX(3px);
+        }
+
+        .fw-card:hover::before {
+            opacity: 1;
+        }
+
+        .fw-card.uncategorized::before {
+            background: var(--text-muted);
+        }
+
+        .fw-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .fw-title-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .fw-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.2px;
+        }
+
+        .fw-id {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            text-transform: lowercase;
+        }
+
+        .fw-group-tag {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            background: var(--accent-dim);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            border: 1px solid var(--accent-dim);
+        }
+
+        .fw-date {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .fw-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .fw-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .fw-link:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .fw-link.primary {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .fw-link.primary:hover {
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .link-icon {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state.hidden {
+            display: none;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.3;
+            font-family: var(--font-mono);
+        }
+
+        .site-footer {
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            padding: 40px 0 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .footer-col h4 {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .footer-col p {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .status-list {
+            list-style: none;
+        }
+
+        .status-list li {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-ok {
+            color: var(--success);
+            font-size: 8px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        @media (max-width: 768px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                order: 2;
+            }
+
+            .group-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .group-btn {
+                width: auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .alpha-nav {
+                top: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-header .container {
+                height: auto;
+                padding: 12px 20px;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .alpha-nav {
+                top: auto;
+                position: relative;
+            }
+
+            .fw-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .fw-links {
+                width: 100%;
+            }
+
+            .fw-link {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .search-hint {
+                display: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+            border: 2px solid var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-hover);
+        }
+
+        ::selection {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+    </style>
 </head>
 <body>
-    <div class="noise"></div>
-    
     <header class="site-header">
         <div class="container">
             <div class="brand">
@@ -21,27 +742,22 @@
                 </div>
             </div>
             <div class="header-meta">
-                <span class="status-dot online"></span>
+                <span class="status-dot"></span>
                 <span id="total-count">0 files</span>
             </div>
         </div>
     </header>
 
-    <nav class="alpha-nav" id="alpha-nav">
+    <nav class="alpha-nav">
         <div class="container">
-            <div class="alpha-list" id="alpha-list">
-                <!-- Generated by JS -->
-            </div>
+            <div class="alpha-list" id="alpha-list"></div>
         </div>
     </nav>
 
     <main class="container">
         <div class="intro-box">
-            <p>Kumpulan firmware unofficial untuk device Transsion (Tecno, Infinix, Itel). 
-            Mirror disediakan sebagai backup karena link official sering mati.</p>
-            <div class="last-update">
-                last sync: <span id="last-sync">checking...</span>
-            </div>
+            <p>Kumpulan firmware unofficial untuk device Transsion (Tecno, Infinix, Itel). Mirror disediakan sebagai backup karena link official sering mati.</p>
+            <div class="last-update">last sync: <span id="last-sync">checking...</span></div>
         </div>
 
         <div class="layout-grid">
@@ -49,14 +765,12 @@
                 <div class="sidebar-section">
                     <h3>Series</h3>
                     <ul class="group-list" id="group-list">
-                        <li><button class="group-btn active" data-group="all">All Devices</button></li>
-                        <!-- Generated by JS -->
+                        <li><button class="group-btn active" data-group="all">All Devices <span class="group-count">0</span></button></li>
                     </ul>
                 </div>
-                
                 <div class="sidebar-section">
                     <h3>Stats</h3>
-                    <div class="stats-grid" id="stats-grid">
+                    <div class="stats-grid">
                         <div class="stat-item">
                             <span class="stat-value" id="stat-total">0</span>
                             <span class="stat-label">total</span>
@@ -76,18 +790,13 @@
                         <span class="search-hint">ctrl + k</span>
                     </div>
                 </div>
-
-                <div class="active-filter" id="active-filter">
-                    showing: <span>all devices</span>
-                </div>
-
+                <div class="active-filter">showing: <span>all devices</span></div>
                 <div class="firmware-list" id="firmware-list">
                     <div class="loading-state">
                         <div class="spinner"></div>
                         <p>loading database...</p>
                     </div>
                 </div>
-
                 <div class="empty-state hidden" id="empty-state">
                     <div class="empty-icon">∅</div>
                     <p>tidak ada hasil</p>
@@ -101,8 +810,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <h4>about</h4>
-                    <p>Proyek personal untuk backup firmware. 
-                    Bukan afiliasi resmi Transsion.</p>
+                    <p>Proyek personal untuk backup firmware. Bukan afiliasi resmi Transsion.</p>
                 </div>
                 <div class="footer-col">
                     <h4>mirror status</h4>
@@ -110,14 +818,6 @@
                         <li><span class="status-ok">●</span> gofile.io</li>
                         <li><span class="status-ok">●</span> pixeldrain</li>
                     </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>commands</h4>
-                    <div class="commands-list">
-                        <code>/newfw &lt;id&gt; &lt;group&gt; &lt;nama&gt; &lt;links&gt;</code>
-                        <code>/newgroup &lt;id&gt; &lt;nama&gt; [desc]</code>
-                        <code>/listgroups</code>
-                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -127,6 +827,206 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        const REPO_OWNER = 'YOUR_USERNAME';
+        const REPO_NAME = 'firmware-db';
+        const DATA_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/data/firmwares.json`;
+
+        let allData = { groups: [], firmwares: [] };
+        let currentGroup = 'all';
+        let currentAlpha = 'all';
+
+        const listEl = document.getElementById('firmware-list');
+        const emptyEl = document.getElementById('empty-state');
+        const searchEl = document.getElementById('search');
+        const countEl = document.getElementById('total-count');
+        const syncEl = document.getElementById('last-sync');
+        const groupListEl = document.getElementById('group-list');
+        const alphaListEl = document.getElementById('alpha-list');
+        const activeFilterEl = document.querySelector('.active-filter span');
+        const statTotalEl = document.getElementById('stat-total');
+        const statGroupsEl = document.getElementById('stat-groups');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            searchEl.addEventListener('input', () => renderList());
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchEl.focus();
+                }
+            });
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch(DATA_URL);
+                if (!response.ok) throw new Error('Failed to fetch');
+                allData = await response.json();
+                if (!allData.groups) allData.groups = [];
+                if (!allData.firmwares) allData.firmwares = [];
+
+                countEl.textContent = `${allData.firmwares.length} files`;
+                statTotalEl.textContent = allData.firmwares.length;
+                statGroupsEl.textContent = allData.groups.length;
+                syncEl.textContent = new Date(allData.last_updated).toLocaleString('id-ID', {
+                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                renderGroups();
+                renderAlphaNav();
+                renderList();
+            } catch (err) {
+                listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠</div><p>gagal memuat database</p><p style="font-size:12px;margin-top:8px;color:var(--text-muted)">${err.message}</p></div>`;
+            }
+        }
+
+        function renderGroups() {
+            const sortedGroups = [...allData.groups].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+            const groupCounts = {};
+            allData.firmwares.forEach(fw => {
+                const gid = fw.group_id || 'uncategorized';
+                groupCounts[gid] = (groupCounts[gid] || 0) + 1;
+            });
+
+            let html = `<li><button class="group-btn ${currentGroup === 'all' ? 'active' : ''}" data-group="all">All Devices <span class="group-count">${allData.firmwares.length}</span></button></li>`;
+            sortedGroups.forEach(g => {
+                const count = groupCounts[g.id] || 0;
+                html += `<li><button class="group-btn ${currentGroup === g.id ? 'active' : ''}" data-group="${g.id}">${escapeHtml(g.name)} <span class="group-count">${count}</span></button></li>`;
+            });
+            if (groupCounts['uncategorized']) {
+                html += `<li><button class="group-btn ${currentGroup === 'uncategorized' ? 'active' : ''}" data-group="uncategorized">Uncategorized <span class="group-count">${groupCounts['uncategorized']}</span></button></li>`;
+            }
+            groupListEl.innerHTML = html;
+
+            groupListEl.querySelectorAll('.group-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentGroup = btn.dataset.group;
+                    currentAlpha = 'all';
+                    groupListEl.querySelectorAll('.group-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    alphaListEl.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+                    alphaListEl.querySelector('[data-alpha="all"]').classList.add('active');
+                    updateActiveFilter();
+                    renderList();
+                });
+            });
+        }
+
+        function renderAlphaNav() {
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+            let html = `<button class="alpha-btn ${currentAlpha === 'all' ? 'active' : ''}" data-alpha="all">#</button>`;
+            alphabet.forEach(letter => {
+                const hasFirmware = allData.firmwares.some(fw => fw.nama.toLowerCase().startsWith(letter));
+                html += `<button class="alpha-btn ${currentAlpha === letter ? 'active' : ''}" data-alpha="${letter}" ${!hasFirmware ? 'disabled' : ''}>${letter}</button>`;
+            });
+            alphaListEl.innerHTML = html;
+
+            alphaListEl.querySelectorAll('.alpha-btn').forEach(btn => {
+                if (btn.disabled) return;
+                btn.addEventListener('click', () => {
+                    currentAlpha = btn.dataset.alpha;
+                    alphaListEl.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateActiveFilter();
+                    renderList();
+                });
+            });
+        }
+
+        function updateActiveFilter() {
+            let text = '';
+            if (currentGroup === 'all' && currentAlpha === 'all') {
+                text = 'all devices';
+            } else if (currentGroup !== 'all' && currentAlpha === 'all') {
+                const group = allData.groups.find(g => g.id === currentGroup);
+                text = group ? group.name.toLowerCase() : currentGroup;
+            } else if (currentGroup === 'all' && currentAlpha !== 'all') {
+                text = `letter "${currentAlpha.toUpperCase()}"`;
+            } else {
+                const group = allData.groups.find(g => g.id === currentGroup);
+                text = `${group ? group.name.toLowerCase() : currentGroup} + "${currentAlpha.toUpperCase()}"`;
+            }
+            activeFilterEl.textContent = text;
+        }
+
+        function renderList() {
+            const searchTerm = searchEl.value.toLowerCase().trim();
+            let filtered = allData.firmwares;
+
+            if (currentGroup !== 'all') {
+                if (currentGroup === 'uncategorized') {
+                    filtered = filtered.filter(fw => !fw.group_id);
+                } else {
+                    filtered = filtered.filter(fw => fw.group_id === currentGroup);
+                }
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(fw => fw.nama.toLowerCase().includes(searchTerm) || fw.id.toLowerCase().includes(searchTerm));
+            }
+
+            if (currentAlpha !== 'all') {
+                filtered = filtered.filter(fw => fw.nama.toLowerCase().startsWith(currentAlpha));
+            }
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            emptyEl.classList.add('hidden');
+            filtered.sort((a, b) => a.nama.localeCompare(b.nama));
+
+            let html = '';
+            if (currentAlpha === 'all' && !searchTerm) {
+                const grouped = {};
+                filtered.forEach(fw => {
+                    const firstLetter = fw.nama[0].toUpperCase();
+                    if (!grouped[firstLetter]) grouped[firstLetter] = [];
+                    grouped[firstLetter].push(fw);
+                });
+                Object.keys(grouped).sort().forEach(letter => {
+                    html += `<div class="letter-section"><div class="letter-header">${letter}</div>${renderFirmwareCards(grouped[letter])}</div>`;
+                });
+            } else {
+                html += renderFirmwareCards(filtered);
+            }
+            listEl.innerHTML = html;
+        }
+
+        function renderFirmwareCards(firmwares) {
+            return firmwares.map(fw => {
+                const group = allData.groups.find(g => g.id === fw.group_id);
+                const groupTag = group ? `<span class="fw-group-tag">${escapeHtml(group.name)}</span>` : '';
+                const uncategorizedClass = !fw.group_id ? 'uncategorized' : '';
+                return `<article class="fw-card ${uncategorizedClass}"><div class="fw-header"><div class="fw-title-group"><h3 class="fw-name">${escapeHtml(fw.nama)}</h3><span class="fw-id">${escapeHtml(fw.id)}</span>${groupTag}</div><time class="fw-date">${formatDate(fw.date)}</time></div><div class="fw-links"><a href="${escapeHtml(fw.links.utama)}" target="_blank" rel="noopener" class="fw-link primary"><span class="link-icon">↓</span><span>download</span></a>${fw.links.gofile ? `<a href="${escapeHtml(fw.links.gofile)}" target="_blank" rel="noopener" class="fw-link"><span class="link-icon">↗</span><span>gofile</span></a>` : ''}${fw.links.pixeldrain ? `<a href="${escapeHtml(fw.links.pixeldrain)}" target="_blank" rel="noopener" class="fw-link"><span class="link-icon">↗</span><span>pixeldrain</span></a>` : ''}</div></article>`;
+            }).join('');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = (now - date) / 1000;
+            if (diff < 3600) return 'baru saja';
+            if (diff < 86400) return `${Math.floor(diff / 3600)}j lalu`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)}h lalu`;
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        }
+
+        setInterval(loadData, 300000);
+    </script>
 </body>
 </html>
