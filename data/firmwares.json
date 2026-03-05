@@ -1,4 +1,37 @@
 {
   "last_updated": "2024-03-05T10:00:00Z",
-  "firmwares": []
+  "groups": [
+    {
+      "id": "pova",
+      "name": "POVA Series",
+      "description": "Gaming series with large battery",
+      "sort_order": 1
+    },
+    {
+      "id": "camon",
+      "name": "Camon Series",
+      "description": "Camera focused series",
+      "sort_order": 2
+    },
+    {
+      "id": "spark",
+      "name": "Spark Series",
+      "description": "Entry level series",
+      "sort_order": 3
+    }
+  ],
+  "firmwares": [
+    {
+      "id": "pova-7",
+      "group_id": "pova",
+      "nama": "POVA 7 4G/NEO",
+      "links": {
+        "utama": "https://huggingface.co/datasets/fab1x/POVA-FIRMWARE-MIRROR/resolve/main/LJ6-15.1.2.145SP10(OP001PF001AZ).zip",
+        "gofile": "https://gofile.io/d/eUY1LG",
+        "pixeldrain": "https://pixeldrain.com/u/Y8q3C54b"
+      },
+      "added_by": "profambatukam",
+      "date": "2026-03-05T14:52:30Z"
+    }
+  ]
 }
